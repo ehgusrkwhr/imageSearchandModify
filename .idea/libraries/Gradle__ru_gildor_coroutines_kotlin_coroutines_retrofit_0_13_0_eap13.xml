@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: ru.gildor.coroutines:kotlin-coroutines-retrofit:0.13.0-eap13">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/ru.gildor.coroutines/kotlin-coroutines-retrofit/0.13.0-eap13/285d27d2543183ce05148fe36d02cd415e0ab7f/kotlin-coroutines-retrofit-0.13.0-eap13.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/ru.gildor.coroutines/kotlin-coroutines-retrofit/0.13.0-eap13/2752cf78ed6b270e60ec944de1317e94dfbe2851/kotlin-coroutines-retrofit-0.13.0-eap13-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/ru.gildor.coroutines/kotlin-coroutines-retrofit/0.13.0-eap13/7481ea939b2bd97fbe0ae913eb97eb35a0b2d0cb/kotlin-coroutines-retrofit-0.13.0-eap13-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

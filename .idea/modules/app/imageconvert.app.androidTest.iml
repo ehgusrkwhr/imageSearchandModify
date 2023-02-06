@@ -36,18 +36,6 @@
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/0cd7c412577c120affd205edcffe7984/transformed/room-ktx-2.4.3-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/34435f830c0ae555b074cdb9dcc7b6b3/transformed/lifecycle-runtime-testing-2.3.1-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/3ef8b34245db4ba899cd6350b0ae4b42/transformed/lifecycle-runtime-ktx-2.5.1-api.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-client-websockets-jvm/2.0.3/30723df5a3b9096fd9e828db0d6c4897c9cd90a0/ktor-client-websockets-jvm-2.0.3.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-client-okhttp-jvm/2.0.3/e12538dd4c3908a20bcf9e9b7f02a063bbe0843/ktor-client-okhttp-jvm-2.0.3.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-serialization-gson-jvm/2.0.3/399f04418e137b5b8d0792158af446654127eb9e/ktor-serialization-gson-jvm-2.0.3.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-client-core-jvm/2.0.3/e070c1592e85cc10067f5dc65c4c5a3a4e0e8022/ktor-client-core-jvm-2.0.3.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-websocket-serialization-jvm/2.0.3/5b524e8fb2b3afd052b81d72cff84d4242b66a49/ktor-websocket-serialization-jvm-2.0.3.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-serialization-jvm/2.0.3/4ab5ab0c7e36c3ae5405f21de14325640688d7e7/ktor-serialization-jvm-2.0.3.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-events-jvm/2.0.3/407b2eede064448e987162bbaf13b21d92546bee/ktor-events-jvm-2.0.3.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-websockets-jvm/2.0.3/67920d884f3ea3d9c42efc83fc576cf95723090d/ktor-websockets-jvm-2.0.3.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-http-jvm/2.0.3/cc8f40ea70fcd24540ceb256df2eb7ea97611435/ktor-http-jvm-2.0.3.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-utils-jvm/2.0.3/bb2d10070fa26e50d350a8efa133b4a95ebffdaa/ktor-utils-jvm-2.0.3.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-io-jvm/2.0.3/d944d914b3a4686a91cbc8f68a0f034a322df15b/ktor-io-jvm-2.0.3.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-jdk8/1.6.2/acf5ee3be3fdde5b2c8d7c5fa64af51f5d06317e/kotlinx-coroutines-jdk8-1.6.2.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/4d18fd6b1adbb56a393041c52b8d9074/transformed/lifecycle-livedata-ktx-2.5.1-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jakewharton.retrofit/retrofit2-kotlin-coroutines-adapter/0.9.2/b3bddf47b1016bfa9e1c5a2d81f8066b33770aec/retrofit2-kotlin-coroutines-adapter-0.9.2.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/ru.gildor.coroutines/kotlin-coroutines-retrofit/0.13.0-eap13/285d27d2543183ce05148fe36d02cd415e0ab7f/kotlin-coroutines-retrofit-0.13.0-eap13.jar</arg>
@@ -135,10 +123,10 @@
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/ebcda5ca97da8faf347eb7626d2f0a64/transformed/core-splashscreen-1.0.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/60ad72ad494898065b423f5ef3c628d3/transformed/circularprogressbar-3.1.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jsoup/jsoup/1.14.1/9cbd867771876e35f0f3088525381d183c7f2aa9/jsoup-1.14.1.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/transforms-3/db4391ab74d476182182928a3a2b16ec/transformed/timber-5.0.1-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.7.10/1ef73fee66f45d52c67e2aca12fd945dbe0659bf/kotlin-stdlib-jdk7-1.7.10.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/e15c7e3fd89868b8748504eabeaf4d9c/transformed/leakcanary-object-watcher-android-2.8.1-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/4.9.3/b0b14b3d12980912723fb8b66afb48dcda742fcb/okhttp-4.9.3.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.6.21/5dc3574d9b7bebfcb4ec6b10ada4aaa9e140bd0b/kotlin-reflect-1.6.21.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/2.8.0/49b64e09d81c0cc84b267edd0c2fd7df5a64c78c/okio-jvm-2.8.0.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.7.10/d2abf9e77736acc4450dc4a3f707fa2c10f5099d/kotlin-stdlib-1.7.10.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/9a1cb7ce794f35a75bfcbe17efa625f6/transformed/leakcanary-android-core-2.8.1-api.jar</arg>
@@ -152,7 +140,6 @@
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/c1e928961939ce64715911a65372dfda/transformed/leakcanary-object-watcher-android-androidx-2.8.1-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/be0ea3d7628e00a223701c1105552c2a/transformed/leakcanary-object-watcher-android-support-fragments-2.8.1-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/f71e3dca861eb913c3602ae8dca7cda1/transformed/leakcanary-object-watcher-android-core-2.8.1-api.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.36/6c62681a2f655b49963a5983b8b0950a6120ae14/slf4j-api-1.7.36.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/shark/2.8.1/51c65310ac0d0a0a7ad44456bccf8392da2d3aca/shark-2.8.1.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/leakcanary-object-watcher/2.8.1/186aa717ad3391cc834619b6b73a4845dc0087e1/leakcanary-object-watcher-2.8.1.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/c6f7ac990303222dc377ac23bf5383f1/transformed/leakcanary-android-utils-2.8.1-api.jar</arg>
@@ -261,24 +248,10 @@
     <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.collection:collection-ktx:1.1.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: io.ktor:ktor-client-websockets-jvm:2.0.3" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.2" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: org.slf4j:slf4j-api:1.7.36" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: io.ktor:ktor-client-core-jvm:2.0.3" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: io.ktor:ktor-http-jvm:2.0.3" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: io.ktor:ktor-utils-jvm:2.0.3" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: io.ktor:ktor-io-jvm:2.0.3" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: io.ktor:ktor-events-jvm:2.0.3" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: io.ktor:ktor-websocket-serialization-jvm:2.0.3" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: io.ktor:ktor-serialization-jvm:2.0.3" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: io.ktor:ktor-websockets-jvm:2.0.3" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: io.ktor:ktor-client-okhttp-jvm:2.0.3" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: com.squareup.okhttp3:okhttp:4.9.3" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: com.squareup.okio:okio:2.8.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: io.ktor:ktor-serialization-gson-jvm:2.0.3" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlin:kotlin-reflect:1.6.21" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.google.code.gson:gson:2.9.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.squareup.retrofit2:retrofit:2.9.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: com.squareup.okhttp3:okhttp:4.9.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: com.squareup.okio:okio:2.8.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.squareup.retrofit2:converter-gson:2.9.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.squareup.okhttp3:logging-interceptor:4.9.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.0.0" level="project" />
@@ -381,6 +354,7 @@
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.core:core-splashscreen:1.0.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.mikhaellopez:circularprogressbar:3.1.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.paging:paging-runtime:3.1.1@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: com.jakewharton.timber:timber:5.0.1@aar" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="imageconvert.app.main" />
 </module>

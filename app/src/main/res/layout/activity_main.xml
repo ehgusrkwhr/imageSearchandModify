@@ -1,35 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  tools:context=".MainActivity">
+  tools:context=".ui.MainActivity">
 
 
-  <com.google.android.material.appbar.AppBarLayout
+  <androidx.fragment.app.FragmentContainerView
+    android:id="@+id/fragment_container_view"
+    android:name="androidx.navigation.fragment.NavHostFragment"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    app:defaultNavHost="true"
+    app:navGraph="@navigation/nav_graph"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
+    />
+
+  <com.google.android.material.bottomnavigation.BottomNavigationView
+    android:id="@+id/bottom_nav"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:menu="@menu/nav_main_menu"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <androidx.appcompat.widget.Toolbar
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      app:contentInsetStart="0dp"
-      app:layout_scrollFlags="scroll|enterAlways"
-      >
-      <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/ic_launcher_background"
-        />
-      <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@null"
-        android:maxLines="1"
-        />
-    </androidx.appcompat.widget.Toolbar>
+    android:layout_height="wrap_content"/>
 
-  </com.google.android.material.appbar.AppBarLayout>
+
 
 
 

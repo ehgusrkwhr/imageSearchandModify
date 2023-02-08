@@ -26,7 +26,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getSearchData("책상", "accuracy", 1, 50)
+
     }
 
     override fun onDestroyView() {

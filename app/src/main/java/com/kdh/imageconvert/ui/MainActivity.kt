@@ -2,6 +2,7 @@ package com.kdh.imageconvert.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MotionEvent
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.kdh.imageconvert.R
@@ -23,5 +24,9 @@ class MainActivity : AppCompatActivity() {
             bottomNavigationView.setupWithNavController(navController)
         }
 
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        return super.onTouchEvent(event)
     }
 }

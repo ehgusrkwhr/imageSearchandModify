@@ -12,6 +12,14 @@
   <fragment
     android:id="@+id/nav_search"
     android:name="com.kdh.imageconvert.ui.SearchFragment"
-    android:label="SearchFragment" />
+    android:label="SearchFragment" >
+    <action
+      android:id="@+id/action_nav_search_to_searchDetailFragment"
+      app:destination="@id/searchDetailFragment" />
+  </fragment>
+  <fragment
+    android:id="@+id/searchDetailFragment"
+    android:name="com.kdh.imageconvert.ui.SearchDetailFragment"
+    android:label="SearchDetailFragment" />
 
 </navigation>

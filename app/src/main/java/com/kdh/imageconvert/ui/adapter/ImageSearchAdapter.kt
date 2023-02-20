@@ -3,65 +3,63 @@ package com.kdh.imageconvert.ui.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.recyclerview.widget.DiffUtil
+import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import androidx.viewbinding.ViewBinding
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.kdh.imageconvert.GlideApp
+import com.kdh.imageconvert.R
 import com.kdh.imageconvert.data.model.Document
-import com.kdh.imageconvert.data.model.SearchData
 import com.kdh.imageconvert.databinding.SearchImageItemBinding
-import timber.log.Timber
+import com.kdh.imageconvert.ui.adapter.diffutil.ImageDiffCallback
 
-class ImageSearchAdapter() :  ListAdapter<Document, ImageSearchAdapter.ImageSearchViewHolder>(ImageSearchDiffCallback()){
+class ImageSearchAdapter : ListAdapter<Document, ImageSearchAdapter.ImageSearchViewHolder>(ImageDiffCallback()) {
 
-    private var listener : OnItemClickListener? = null
+    private var listener: OnItemClickListener? = null
 
-    interface  OnItemClickListener{
-        fun onItemClicked(position: Int,data: Document) : Unit
+    interface OnItemClickListener {
+        fun onItemClicked(position: Int): Unit
     }
 
-    fun setClickListener(itemListener : OnItemClickListener){
+    fun setClickListener(itemListener: OnItemClickListener) {
         this.listener = itemListener
     }
 
+    inner class ImageSearchViewHolder(private val binding: SearchImageItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    inner class ImageSearchViewHolder(private val binding : SearchImageItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(document : Document){
-            Log.d("dodo55", "ImageSearchViewHolder")
-            GlideApp.with(binding.ivImageSearch).load(document.thumbnail_url).into(binding.ivImageSearch)
+        init{
+            binding.ivImageSearch.setOnClickListener {
+                listener?.onItemClicked(bindingAdapterPosition)
+            }
+        }
+
+        fun bind(document: Document) {
+//            binding.root.animation = AnimationUtils.loadAnimation(binding.root.context, R.anim.search_image_slide)
+            GlideApp.with(binding.ivImageSearch)
+                .load(document.thumbnail_url)
+                .error(R.drawable.image_fail)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(binding.ivImageSearch)
             binding.tvImageSize.text = "${document.width} x ${document.height}"
 
-            binding.ivImageSearch.setOnClickListener{
-                listener?.onItemClicked(bindingAdapterPosition,document)
-            }
+
 
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageSearchViewHolder {
-        Log.d("dodo55", "onCreateViewHolder")
-        val binding = SearchImageItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val binding = SearchImageItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ImageSearchViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ImageSearchViewHolder, position: Int) {
-        Log.d("dodo55", "onBindViewHolder")
+
         holder.bind(getItem(position))
     }
 
 
 }
 
-class ImageSearchDiffCallback : DiffUtil.ItemCallback<Document>(){
-    override fun areItemsTheSame(oldItem: Document, newItem: Document): Boolean {
-        return oldItem.image_url == newItem.image_url
-    }
-
-    override fun areContentsTheSame(oldItem: Document, newItem: Document): Boolean {
-        return oldItem == newItem
-    }
-
-}

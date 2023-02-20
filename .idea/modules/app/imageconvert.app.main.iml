@@ -92,8 +92,8 @@
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/424dfca7cca6ee529098a16e0299115d/transformed/interpolator-1.0.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/8916c276e8031078b536a2543f954949/transformed/gifdecoder-4.13.2-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/c86dc2d59750959a1b08a1e15aa38983/transformed/exifinterface-1.2.0-api.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/transforms-3/c02bdb23f48cff0e5b8c2a143f6b91e0/transformed/versionedparcelable-1.1.1-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.collection/collection-ktx/1.1.0/f807b2f366f7b75142a67d2f3c10031065b5168/collection-ktx-1.1.0.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/transforms-3/c02bdb23f48cff0e5b8c2a143f6b91e0/transformed/versionedparcelable-1.1.1-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.collection/collection/1.1.0/1f27220b47669781457de0d600849a5de0e89909/collection-1.1.0.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/2b85c17634c9d26c17f7df800635e771/transformed/documentfile-1.0.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/ee8444cf50287671133f9badd0586d95/transformed/localbroadcastmanager-1.0.0-api.jar</arg>

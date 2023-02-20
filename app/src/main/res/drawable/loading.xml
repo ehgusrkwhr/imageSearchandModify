@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <item android:gravity="center"
+    android:width="110dp"
+    android:height="110dp"
+    >
+    <rotate
+      android:drawable="@drawable/loading_out"
+      android:fromDegrees="0"
+      android:pivotX="50%"
+      android:pivotY="50%"
+      android:toDegrees="360" />
+  </item>
+  <item
+    android:drawable="@drawable/loading_inner"
+    android:gravity="center"
+    android:width="50dp"
+    android:height="50dp"
+
+    />
+
+
+</layer-list>

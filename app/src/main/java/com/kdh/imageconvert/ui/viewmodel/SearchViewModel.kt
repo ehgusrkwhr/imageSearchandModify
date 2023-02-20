@@ -1,27 +1,35 @@
 package com.kdh.imageconvert.ui.viewmodel
 
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kdh.imageconvert.data.model.Document
 import com.kdh.imageconvert.data.model.SearchData
 import com.kdh.imageconvert.data.repository.search.SearchRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.kdh.imageconvert.ui.state.UiState
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class SearchViewModel : ViewModel() {
 
-    private val _searchData = MutableStateFlow<SearchData>(SearchData(null,null))
-    val searchData : StateFlow<SearchData> = _searchData
+    private val _searchData = MutableStateFlow<UiState<SearchData>>(UiState.Empty)
+    val searchData = _searchData.asStateFlow()
 
     private val searchRepository: SearchRepository = SearchRepository()
-    fun getSearchData(query : String,sort : String,page : Int,size:Int) {
+    fun getSearchData(query: String, sort: String, page: Int, size: Int) {
         viewModelScope.launch {
-            Timber.d("${searchRepository.getImageData(query,sort ,page,size)}")
-            _searchData.value = searchRepository.getImageData(query,sort ,page,size)
+//            Timber.d("${searchRepository.getImageData(query,sort ,page,size)}")
+            searchRepository.getImageData(query, sort, page, size)
+                .onStart { _searchData.update { UiState.Loading } }
+                .catch { e -> _searchData.update { UiState.Error(e.message) } }
+                .collectLatest { value ->
+                    _searchData.update { UiState.Success(value) }
+                }
+
+
         }
-
     }
-
 
 }

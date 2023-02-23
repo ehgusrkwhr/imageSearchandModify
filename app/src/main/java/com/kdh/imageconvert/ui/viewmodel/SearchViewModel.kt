@@ -16,8 +16,8 @@ class SearchViewModel : ViewModel() {
 
     private val _searchData = MutableStateFlow<UiState<SearchData>>(UiState.Empty)
     val searchData = _searchData.asStateFlow()
-
     private val searchRepository: SearchRepository = SearchRepository()
+    var sumSearchData = mutableListOf<Document>()
     fun getSearchData(query: String, sort: String, page: Int, size: Int) {
         viewModelScope.launch {
 //            Timber.d("${searchRepository.getImageData(query,sort ,page,size)}")
@@ -27,8 +27,6 @@ class SearchViewModel : ViewModel() {
                 .collectLatest { value ->
                     _searchData.update { UiState.Success(value) }
                 }
-
-
         }
     }
 

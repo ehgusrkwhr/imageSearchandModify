@@ -46,43 +46,6 @@
       />
 
   </androidx.coordinatorlayout.widget.CoordinatorLayout>
-  <androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/detail_layout"
-    android:visibility="gone"
-    android:animateLayoutChanges="true"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <androidx.viewpager2.widget.ViewPager2
-      android:id="@+id/vp_image_detail"
-      android:layout_width="0dp"
-      android:layout_height="0dp"
-      app:layout_constraintBottom_toTopOf="@+id/tv_bottom"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/tv_top"
-      />
-
-
-    <TextView
-      android:id="@+id/tv_top"
-      android:layout_width="match_parent"
-      android:layout_height="60dp"
-      android:gravity="center"
-      android:text="상단영역"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
-    <TextView
-      android:id="@+id/tv_bottom"
-      android:layout_width="match_parent"
-      android:layout_height="60dp"
-      android:gravity="center"
-      android:text="하단영역"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent" />
-  </androidx.constraintlayout.widget.ConstraintLayout>
-
   <ProgressBar
     android:id="@+id/pb_loading"
     android:visibility="gone"

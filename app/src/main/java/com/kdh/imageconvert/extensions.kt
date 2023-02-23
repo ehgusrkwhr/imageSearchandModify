@@ -2,6 +2,8 @@ package com.kdh.imageconvert
 
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
+import android.view.View.OnClickListener
 import android.view.animation.AnimationUtils
 import android.widget.EditText
 import androidx.lifecycle.*
@@ -24,6 +26,16 @@ fun EditText.textChangesToFlow(): Flow<CharSequence?> {
         awaitClose { removeTextChangedListener(listener) }
     }.onStart {
         emit(text)
+    }
+}
+
+fun View.clicks(): Flow<Unit> {
+    return callbackFlow {
+        val listener = OnClickListener {
+            trySend(Unit)
+        }
+        setOnClickListener(listener)
+        awaitClose { setOnClickListener(null) }
     }
 }
 

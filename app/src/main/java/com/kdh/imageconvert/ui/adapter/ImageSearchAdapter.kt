@@ -1,6 +1,7 @@
 package com.kdh.imageconvert.ui.adapter
 
 
+import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,16 +10,91 @@ import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
 import com.kdh.imageconvert.GlideApp
+import com.kdh.imageconvert.GlideExtension
 import com.kdh.imageconvert.R
 import com.kdh.imageconvert.data.model.Document
+import com.kdh.imageconvert.databinding.ProgressItemBinding
 import com.kdh.imageconvert.databinding.SearchImageItemBinding
 import com.kdh.imageconvert.ui.adapter.diffutil.ImageDiffCallback
 
-class ImageSearchAdapter : ListAdapter<Document, ImageSearchAdapter.ImageSearchViewHolder>(ImageDiffCallback()) {
+//class ImageSearchAdapter : ListAdapter<Document, ImageSearchAdapter.ImageSearchViewHolder>(ImageDiffCallback()) {
+class ImageSearchAdapter : ListAdapter<Document, RecyclerView.ViewHolder>(ImageDiffCallback()) {
 
     private var listener: OnItemClickListener? = null
+    var isLoading = false
+
+    fun loadingProgressShow() {
+        this.isLoading = true
+    }
+
+    fun loadingProgressHide() {
+        this.isLoading = false
+    }
+
+    companion object {
+        private const val VIEW_TYPE_PROGRESS = 1
+        private const val VIEW_TYPE_DATA = 2
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+//        val binding = SearchImageItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+//        return ImageSearchViewHolder(binding)
+        val binding = SearchImageItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return if (viewType == VIEW_TYPE_PROGRESS) {
+            //로딩
+            ProgressViewHolder(binding)
+        } else {
+
+            ImageSearchViewHolder(binding)
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is ProgressViewHolder -> holder.bind()
+            is ImageSearchViewHolder -> holder.bind(getItem(position), position)
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (position == itemCount - 1 && isLoading) {
+            VIEW_TYPE_PROGRESS
+        } else {
+            VIEW_TYPE_DATA
+        }
+    }
+
+    inner class ProgressViewHolder(private val binding: SearchImageItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind() {
+            binding.progressImage.visibility = View.VISIBLE
+        }
+    }
+
+    inner class ImageSearchViewHolder(private val binding: SearchImageItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        init {
+            binding.ivImageSearch.setOnClickListener {
+                listener?.onItemClicked(bindingAdapterPosition)
+            }
+        }
+
+        fun bind(document: Document, pos: Int) {
+            binding.progressImage.visibility = View.GONE
+            GlideApp.with(binding.ivImageSearch)
+                .load(document.image_url)
+                .apply(GlideExtension.imageOptions(RequestOptions()))
+                .override(200, 200)
+                .into(binding.ivImageSearch)
+            binding.tvImageSize.text = "${document.width} x ${document.height}"
+        }
+    }
 
     interface OnItemClickListener {
         fun onItemClicked(position: Int): Unit
@@ -26,38 +102,6 @@ class ImageSearchAdapter : ListAdapter<Document, ImageSearchAdapter.ImageSearchV
 
     fun setClickListener(itemListener: OnItemClickListener) {
         this.listener = itemListener
-    }
-
-    inner class ImageSearchViewHolder(private val binding: SearchImageItemBinding) : RecyclerView.ViewHolder(binding.root) {
-
-        init{
-            binding.ivImageSearch.setOnClickListener {
-                listener?.onItemClicked(bindingAdapterPosition)
-            }
-        }
-
-        fun bind(document: Document) {
-//            binding.root.animation = AnimationUtils.loadAnimation(binding.root.context, R.anim.search_image_slide)
-            GlideApp.with(binding.ivImageSearch)
-                .load(document.thumbnail_url)
-                .error(R.drawable.image_fail)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(binding.ivImageSearch)
-            binding.tvImageSize.text = "${document.width} x ${document.height}"
-
-
-
-        }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageSearchViewHolder {
-        val binding = SearchImageItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ImageSearchViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: ImageSearchViewHolder, position: Int) {
-
-        holder.bind(getItem(position))
     }
 
 

@@ -1,37 +1,25 @@
 package com.kdh.imageconvert.ui
 
-import android.app.ActivityOptions
 import android.content.Context
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
-import android.view.animation.LayoutAnimationController
-import android.view.animation.TranslateAnimation
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
+
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
-import androidx.viewbinding.ViewBinding
-import com.kdh.imageconvert.R
-import com.kdh.imageconvert.data.model.Document
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.kdh.imageconvert.databinding.FragmentSearchBinding
 import com.kdh.imageconvert.repeatLastCollectOnStarted
 import com.kdh.imageconvert.textChangesToFlow
-import com.kdh.imageconvert.ui.adapter.ImageDetailViewPagerAdapter
 import com.kdh.imageconvert.ui.adapter.ImageSearchAdapter
+import com.kdh.imageconvert.ui.adapter.decoration.GridSpacingItemDecoration
+import com.kdh.imageconvert.ui.custom.DialogImageDetail
 import com.kdh.imageconvert.ui.state.UiState
 import com.kdh.imageconvert.ui.viewmodel.SearchViewModel
 import kotlinx.coroutines.*
@@ -40,8 +28,6 @@ import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 
 class SearchFragment : Fragment() {
-
-    //    private val binding : Sear
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
@@ -52,19 +38,18 @@ class SearchFragment : Fragment() {
         get() = Dispatchers.IO + textCoroutineJob
 
     private lateinit var backEvent: OnBackPressedCallback
-    private lateinit var imageDetailViewPagerAdapter: ImageDetailViewPagerAdapter
-
-    private var sumSearchData = mutableListOf<Document>()
     private var keyword = ""
     private val rvPagingSet = mutableSetOf<Int>()
+    private var dialogFragment: DialogImageDetail? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         backEvent = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (binding.detailLayout.visibility == View.VISIBLE) {
-                    binding.detailLayout.visibility = View.GONE
-                    binding.searchLayout.visibility = View.VISIBLE
+                dialogFragment?.let {
+                    if (it.isVisible) {
+                        it.dismiss()
+                    }
                 }
             }
         }
@@ -85,19 +70,22 @@ class SearchFragment : Fragment() {
     }
 
     private fun initSearchAdapter() {
+
         imageSearchAdapter = ImageSearchAdapter().apply {
             setClickListener(object : ImageSearchAdapter.OnItemClickListener {
                 override fun onItemClicked(position: Int) {
-                    binding.searchLayout.visibility = View.GONE
-                    binding.detailLayout.visibility = View.VISIBLE
-                    binding.vpImageDetail.setCurrentItem(position, false)
+                    dialogFragment = DialogImageDetail(position)
+                    dialogFragment?.show(parentFragmentManager, "custom_dialog")
                 }
             })
         }
 
         binding.rvSearchInfo.apply {
+            layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
             adapter = imageSearchAdapter
-            layoutManager = GridLayoutManager(context, 3)
+//            addItemDecoration(GridSpacingItemDecoration(10))
+//            layoutManager = GridLayoutManager(context, 3)
+
         }
 
         rvPagingEvent()
@@ -114,8 +102,9 @@ class SearchFragment : Fragment() {
                 }
                 .onEach {
                     if (keyword != it.toString()) {
-                        sumSearchData.clear()
+                        searchViewModel.sumSearchData.clear()
                         keyword = it.toString()
+                        rvPagingSet.clear()
                     }
                     searchViewModel.getSearchData(keyword, "accuracy", 1, PAGING_SIZE)
                 }
@@ -124,45 +113,51 @@ class SearchFragment : Fragment() {
     }
 
     private fun initImageDetailAdapter() {
-        imageDetailViewPagerAdapter = ImageDetailViewPagerAdapter()
-        binding.vpImageDetail.adapter = imageDetailViewPagerAdapter
+//        imageDetailViewPagerAdapter = ImageDetailViewPagerAdapter()
+//        binding.vpImageDetail.adapter = imageDetailViewPagerAdapter
 
     }
 
     private fun rvPagingEvent() {
         binding.rvSearchInfo.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             var pageCount = 1
-            var searchEqualNum = 0
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 if (dy > 0) {
-                    val layoutManager = recyclerView.layoutManager as GridLayoutManager
-                    val rvPosition = layoutManager.findLastCompletelyVisibleItemPosition() + 1
-                    if (rvPosition == layoutManager.itemCount) {
-                        //    로딩중이면 실행금
+
+                    val layoutManager = recyclerView.layoutManager as StaggeredGridLayoutManager
+                    // 마지막 아이템이 보이는지 체크
+                    val lastVisibleItemPositions = layoutManager.findLastVisibleItemPositions(null)
+                    val lastVisibleItemPosition = getLastVisibleItem(lastVisibleItemPositions)
+                    val totalItemCount = layoutManager.itemCount
+                    Log.d("dodo55 ","totalItemCount - 1 : ${totalItemCount - 1}")
+                    Log.d("dodo55 ","lastVisibleItemPosition : ${lastVisibleItemPosition}")
+                    // 페이징 처리˜
+                    if (totalItemCount - 1 == lastVisibleItemPosition) {
                         if (!rvPagingSet.contains(layoutManager.itemCount)) {
+                            imageSearchAdapter.loadingProgressShow()
                             pageCount++
                             rvPagingSet.add(layoutManager.itemCount)
                             searchViewModel.getSearchData(keyword, "accuracy", pageCount, PAGING_SIZE)
+
                         }
                     }
                 }
-
-//                val rvPosition = (recyclerView.layoutManager as GridLayoutManager).findLastVisibleItemPosition()
-//                Log.d("dodo55 ","rvPosition : ${rvPosition}")
-//                Log.d("dodo55 ","recyclerView.adapter?.itemCount : ${recyclerView.adapter?.itemCount}")
-//                if(rvPosition + 1 == recyclerView.adapter?.itemCount){
-//                    if(!rvPagingSet.contains(recyclerView.adapter?.itemCount!!)){
-//                        pageCount++
-//                        Log.d("dodo55 ","rvPagingSet : ${rvPagingSet}")
-//                        rvPagingSet.add(recyclerView.adapter?.itemCount!!)
-//                        searchViewModel.getSearchData(keyword, "accuracy", pageCount, 30)
-//
-//                    }
-//                }
-                Log.d("dodo55 ", "rvPagingSet123123 : ${rvPagingSet}")
             }
         })
+    }
+
+    // 마지막 뷰 인덱스 계산
+    private fun getLastVisibleItem(lastVisibleItemPositions: IntArray): Int {
+        var maxSize = 0
+        for (i in lastVisibleItemPositions.indices) {
+            if (i == 0) {
+                maxSize = lastVisibleItemPositions[i]
+            } else if (lastVisibleItemPositions[i] > maxSize) {
+                maxSize = lastVisibleItemPositions[i]
+            }
+        }
+        return maxSize
     }
 
     private fun initDataObserver() {
@@ -171,10 +166,10 @@ class SearchFragment : Fragment() {
                 when (state) {
                     is UiState.Success -> {
                         binding.pbLoading.visibility = View.GONE
-//                        binding.rvSearchInfo.layoutAnimation = AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.search_image_slide)
-                        state.data.documents?.let { sumSearchData.addAll(it) }
-                        imageSearchAdapter.submitList(sumSearchData.toMutableList())
-                        imageDetailViewPagerAdapter.submitList(sumSearchData.toMutableList())
+                        state.data.documents?.let {
+                            searchViewModel.sumSearchData.addAll(it)
+                        }
+                        imageSearchAdapter.submitList(searchViewModel.sumSearchData.toMutableList())
                     }
                     is UiState.Error -> {
                         Timber.d("initDataObserver error ${state.error}")
@@ -197,7 +192,7 @@ class SearchFragment : Fragment() {
 
     }
 
-    companion object{
-        const val PAGING_SIZE = 20
+    companion object {
+        const val PAGING_SIZE = 25
     }
 }

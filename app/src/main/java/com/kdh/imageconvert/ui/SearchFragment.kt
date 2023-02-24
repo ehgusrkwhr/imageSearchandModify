@@ -37,7 +37,7 @@ class SearchFragment : Fragment() {
     private val textCoroutineContext: CoroutineContext
         get() = Dispatchers.IO + textCoroutineJob
 
-    private lateinit var backEvent: OnBackPressedCallback
+    private var backEvent: OnBackPressedCallback? = null
     private var keyword = ""
     private val rvPagingSet = mutableSetOf<Int>()
     private var dialogFragment: DialogImageDetail? = null
@@ -46,14 +46,18 @@ class SearchFragment : Fragment() {
         super.onAttach(context)
         backEvent = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                dialogFragment?.let {
-                    if (it.isVisible) {
-                        it.dismiss()
-                    }
+                if (dialogFragment == null) {
+                    Log.d("dodo55 ","dialogFragment null")
+                    isEnabled = false
+                    requireActivity().onBackPressed()
+                } else {
+                    Log.d("dodo55 ","dialogFragment")
+                    dialogFragment = null
+                    requireActivity().onBackPressed()
                 }
             }
         }
-        requireActivity().onBackPressedDispatcher.addCallback(this, backEvent)
+        requireActivity().onBackPressedDispatcher.addCallback(this, backEvent!!)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -66,12 +70,11 @@ class SearchFragment : Fragment() {
         initSearchAdapter()
         initSearchEvent()
         initDataObserver()
-        initImageDetailAdapter()
     }
 
     private fun initSearchAdapter() {
 
-        imageSearchAdapter = ImageSearchAdapter().apply {
+        imageSearchAdapter = ImageSearchAdapter(requireContext()).apply {
             setClickListener(object : ImageSearchAdapter.OnItemClickListener {
                 override fun onItemClicked(position: Int) {
                     dialogFragment = DialogImageDetail(position)
@@ -83,11 +86,7 @@ class SearchFragment : Fragment() {
         binding.rvSearchInfo.apply {
             layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
             adapter = imageSearchAdapter
-//            addItemDecoration(GridSpacingItemDecoration(10))
-//            layoutManager = GridLayoutManager(context, 3)
-
         }
-
         rvPagingEvent()
     }
 
@@ -112,11 +111,6 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun initImageDetailAdapter() {
-//        imageDetailViewPagerAdapter = ImageDetailViewPagerAdapter()
-//        binding.vpImageDetail.adapter = imageDetailViewPagerAdapter
-
-    }
 
     private fun rvPagingEvent() {
         binding.rvSearchInfo.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -124,14 +118,11 @@ class SearchFragment : Fragment() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 if (dy > 0) {
-
                     val layoutManager = recyclerView.layoutManager as StaggeredGridLayoutManager
                     // 마지막 아이템이 보이는지 체크
                     val lastVisibleItemPositions = layoutManager.findLastVisibleItemPositions(null)
                     val lastVisibleItemPosition = getLastVisibleItem(lastVisibleItemPositions)
                     val totalItemCount = layoutManager.itemCount
-                    Log.d("dodo55 ","totalItemCount - 1 : ${totalItemCount - 1}")
-                    Log.d("dodo55 ","lastVisibleItemPosition : ${lastVisibleItemPosition}")
                     // 페이징 처리˜
                     if (totalItemCount - 1 == lastVisibleItemPosition) {
                         if (!rvPagingSet.contains(layoutManager.itemCount)) {
@@ -139,7 +130,6 @@ class SearchFragment : Fragment() {
                             pageCount++
                             rvPagingSet.add(layoutManager.itemCount)
                             searchViewModel.getSearchData(keyword, "accuracy", pageCount, PAGING_SIZE)
-
                         }
                     }
                 }
@@ -169,6 +159,7 @@ class SearchFragment : Fragment() {
                         state.data.documents?.let {
                             searchViewModel.sumSearchData.addAll(it)
                         }
+
                         imageSearchAdapter.submitList(searchViewModel.sumSearchData.toMutableList())
                     }
                     is UiState.Error -> {
@@ -187,6 +178,11 @@ class SearchFragment : Fragment() {
 
     override fun onDestroyView() {
         textCoroutineContext.cancel()
+        dialogFragment?.isVisible.let {
+            dialogFragment?.dismiss()
+        }
+        dialogFragment = null
+        backEvent = null
         _binding = null
         super.onDestroyView()
 

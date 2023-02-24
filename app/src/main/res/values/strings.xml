@@ -1,3 +1,4 @@
 <resources>
   <string name="app_name">imageconvert</string>
+  <string name="list_image_size">%1\$d x %2\$d</string>
 </resources>

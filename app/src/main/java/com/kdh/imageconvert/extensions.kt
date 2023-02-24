@@ -39,16 +39,26 @@ fun View.clicks(): Flow<Unit> {
     }
 }
 
-
 fun LifecycleOwner.repeatLastCollectOnStarted(block: suspend CoroutineScope.() -> Unit) {
     lifecycleScope.launch {
         lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED, block)
     }
 }
 
+private const val CLICK_DELAY = 1000L
+private var lastClickTime: Long = 0
 
-//fun LifecycleOwner.repeatLastCollectOnStarted(block: suspend CoroutineScope.() -> Unit) {
-//    lifecycleScope.launchWhenStarted { block }
-//}
+fun View.safeOnClickListener(block: (View) -> Unit) {
+    setOnClickListener {
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - lastClickTime > CLICK_DELAY) {
+            block(it)
+            lastClickTime = currentTime
+        }
+    }
+
+}
+
+
 
 

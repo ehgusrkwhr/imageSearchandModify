@@ -1,6 +1,8 @@
 package com.kdh.imageconvert.ui.adapter
 
 
+import android.content.Context
+import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
@@ -26,7 +28,7 @@ import com.kdh.imageconvert.databinding.SearchImageItemBinding
 import com.kdh.imageconvert.ui.adapter.diffutil.ImageDiffCallback
 
 //class ImageSearchAdapter : ListAdapter<Document, ImageSearchAdapter.ImageSearchViewHolder>(ImageDiffCallback()) {
-class ImageSearchAdapter : ListAdapter<Document, RecyclerView.ViewHolder>(ImageDiffCallback()) {
+class ImageSearchAdapter(private val context : Context) : ListAdapter<Document, RecyclerView.ViewHolder>(ImageDiffCallback()) {
 
     private var listener: OnItemClickListener? = null
     var isLoading = false
@@ -89,8 +91,29 @@ class ImageSearchAdapter : ListAdapter<Document, RecyclerView.ViewHolder>(ImageD
             binding.progressImage.visibility = View.GONE
             GlideApp.with(binding.ivImageSearch)
                 .load(document.image_url)
+                .listener(object : RequestListener<Drawable>{
+                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                        return false
+                    }
+
+                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                       // 특정 height 초과했을떄 값 고정
+                        resource?.let{
+                            val height = it.intrinsicHeight
+                            val maxHeight =  context.resources.getDimensionPixelSize(R.dimen.image_max_height)
+//                            Log.d("dodo55 ","height : ${height}  ,, maxHeight : ${maxHeight}")
+                            if(height > maxHeight){
+                                binding.ivImageSearch.layoutParams.height = maxHeight
+                            }else{
+                                binding.ivImageSearch.layoutParams.height = height
+                            }
+                        }
+                        return false
+                    }
+
+                })
                 .apply(GlideExtension.imageOptions(RequestOptions()))
-                .override(200, 200)
+//                .override(imageViewWidth, imageViewHeight)
                 .into(binding.ivImageSearch)
             binding.tvImageSize.text = "${document.width} x ${document.height}"
         }

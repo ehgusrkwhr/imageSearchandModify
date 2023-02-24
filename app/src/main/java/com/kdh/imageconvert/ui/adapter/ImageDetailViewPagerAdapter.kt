@@ -23,6 +23,17 @@ import com.kdh.imageconvert.databinding.SearchDetailImageItemBinding
 import com.kdh.imageconvert.ui.adapter.diffutil.ImageDiffCallback
 
 class ImageDetailViewPagerAdapter : ListAdapter<Document, ImageDetailViewPagerAdapter.ImageDetailViewHolder>(ImageDiffCallback()) {
+
+    interface ClickListener {
+        fun onOffViewClickEvent()
+    }
+
+    private var listener: ClickListener? = null
+
+    fun setClickListener(event: ClickListener) {
+        this.listener = event
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageDetailViewHolder {
         val binding = SearchDetailImageItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ImageDetailViewHolder(binding)
@@ -33,17 +44,22 @@ class ImageDetailViewPagerAdapter : ListAdapter<Document, ImageDetailViewPagerAd
     }
 
     inner class ImageDetailViewHolder(private val binding: SearchDetailImageItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        init {
+            listener?.let { event ->
+                binding.ivImageDetail.setOnClickListener {
+                    event.onOffViewClickEvent()
+                }
+            }
+        }
+
         fun bind(document: Document, position: Int) {
 //            val imageData = imageDataList[position]
-
 
             GlideApp.with(binding.ivImageDetail)
                 .load(document.image_url)
                 .apply(GlideExtension.imageOptions(RequestOptions()))
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-
-                 //       Glide.with(binding.ivImageDetail).load(R.drawable.image_fail).into(binding.ivImageDetail)
                         return true
                     }
 
@@ -53,11 +69,7 @@ class ImageDetailViewPagerAdapter : ListAdapter<Document, ImageDetailViewPagerAd
 
                 })
                 .into(binding.ivImageDetail)
-
-
             startAndEndPreload(position, binding)
-
-            Log.d("dodo ", "getCurrentList.size : ${currentList.size}")
         }
     }
 

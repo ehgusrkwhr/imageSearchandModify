@@ -2,24 +2,19 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:id="@+id/nav_graph"
-  app:startDestination="@id/nav_home">
+  app:startDestination="@id/nav_search">
 
   <fragment
     android:id="@+id/nav_home"
-    android:name="com.kdh.imageconvert.ui.HomeFragment"
-    android:label="HomeFragment" />
+    android:label="HomeFragment"
+    android:name="com.kdh.imageconvert.ui.HomeFragment" />
 
   <fragment
     android:id="@+id/nav_search"
-    android:name="com.kdh.imageconvert.ui.SearchFragment"
-    android:label="SearchFragment" >
-    <action
-      android:id="@+id/action_nav_search_to_searchDetailFragment"
-      app:destination="@id/searchDetailFragment" />
+    android:label="SearchFragment"
+    android:name="com.kdh.imageconvert.ui.SearchFragment">
+
   </fragment>
-  <fragment
-    android:id="@+id/searchDetailFragment"
-    android:name="com.kdh.imageconvert.ui.SearchDetailFragment"
-    android:label="SearchDetailFragment" />
+
 
 </navigation>

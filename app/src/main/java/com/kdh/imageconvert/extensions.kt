@@ -6,6 +6,8 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.animation.AnimationUtils
 import android.widget.EditText
+import android.widget.SearchView
+import android.widget.SearchView.OnQueryTextListener
 import androidx.lifecycle.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
@@ -28,6 +30,18 @@ fun EditText.textChangesToFlow(): Flow<CharSequence?> {
         emit(text)
     }
 }
+
+//fun SearchView.textChangesToFlow(): Flow<CharSequence?> {
+//    return callbackFlow {
+//        val listener = object : OnQueryTextListener{
+//
+//        }
+//        addTextChangedListener(listener)
+//        awaitClose { removeTextChangedListener(listener) }
+//    }.onStart {
+//        emit(text)
+//    }
+//}
 
 fun View.clicks(): Flow<Unit> {
     return callbackFlow {

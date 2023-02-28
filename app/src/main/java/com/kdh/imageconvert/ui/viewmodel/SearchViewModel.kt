@@ -1,5 +1,6 @@
 package com.kdh.imageconvert.ui.viewmodel
 
+import android.graphics.Bitmap
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,8 @@ import com.kdh.imageconvert.data.model.Document
 import com.kdh.imageconvert.data.model.SearchData
 import com.kdh.imageconvert.data.repository.search.SearchRepository
 import com.kdh.imageconvert.ui.state.UiState
+import com.kdh.imageconvert.util.FileUtil
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -29,5 +32,18 @@ class SearchViewModel : ViewModel() {
                 }
         }
     }
+
+//    fun fetchSaveImageSearchTextList() : List<String>{
+//
+//    }
+
+
+//    fun fetchImageFiles() : List<Bitmap?>? {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            FileUtil.fetchImagesToMediaStore()
+//        }
+//
+//        return null
+//    }
 
 }

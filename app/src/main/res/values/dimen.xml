@@ -3,5 +3,8 @@
 
   <dimen name ="image_max_height">120dp</dimen>
   <dimen name ="image_max_width">115dp</dimen>
+  <dimen name="image_frame_width">300dp</dimen>
+  <dimen name="image_frame_height">520dp</dimen>
+  <dimen name="image_frame_margin">15dp</dimen>
 
 </resources>

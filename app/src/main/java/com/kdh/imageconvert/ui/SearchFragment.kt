@@ -14,14 +14,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.kdh.imageconvert.SearchApp.Companion.getAppContext
 import com.kdh.imageconvert.databinding.FragmentSearchBinding
 import com.kdh.imageconvert.repeatLastCollectOnStarted
 import com.kdh.imageconvert.textChangesToFlow
 import com.kdh.imageconvert.ui.adapter.ImageSearchAdapter
+import com.kdh.imageconvert.ui.adapter.SaveImageSearchTextAdapter
 import com.kdh.imageconvert.ui.adapter.decoration.GridSpacingItemDecoration
 import com.kdh.imageconvert.ui.custom.DialogImageDetail
 import com.kdh.imageconvert.ui.state.UiState
 import com.kdh.imageconvert.ui.viewmodel.SearchViewModel
+import com.kdh.imageconvert.util.ImageDataStore
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import timber.log.Timber
@@ -33,25 +36,31 @@ class SearchFragment : Fragment() {
     private val binding get() = _binding!!
     private val searchViewModel: SearchViewModel by activityViewModels()
     private lateinit var imageSearchAdapter: ImageSearchAdapter
-    private var textCoroutineJob: Job = Job()
-    private val textCoroutineContext: CoroutineContext
-        get() = Dispatchers.IO + textCoroutineJob
+    private lateinit var  saveImageSearchTextAdapter: SaveImageSearchTextAdapter
+
+    //    private var textCoroutineJob: Job = Job()
+//    private val textCoroutineContext: CoroutineContext
+//        get() = Dispatchers.IO + textCoroutineJob
+    private var textCoroutineJob: Job? = null
+    private var textCoroutineContext: CoroutineContext? = null
+//        get() = Dispatchers.IO + textCoroutineJob
 
     private var backEvent: OnBackPressedCallback? = null
     private var keyword = ""
     private val rvPagingSet = mutableSetOf<Int>()
     private var dialogFragment: DialogImageDetail? = null
+    private val imageDataStore by lazy {
+        ImageDataStore(getAppContext(requireContext()))
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         backEvent = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (dialogFragment == null) {
-                    Log.d("dodo55 ","dialogFragment null")
                     isEnabled = false
                     requireActivity().onBackPressed()
                 } else {
-                    Log.d("dodo55 ","dialogFragment")
                     dialogFragment = null
                     requireActivity().onBackPressed()
                 }
@@ -62,6 +71,7 @@ class SearchFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        initCoroutineContext()
         return binding.root
     }
 
@@ -70,6 +80,12 @@ class SearchFragment : Fragment() {
         initSearchAdapter()
         initSearchEvent()
         initDataObserver()
+    }
+
+    private fun initCoroutineContext() {
+        textCoroutineJob = Job()
+        textCoroutineContext = Dispatchers.IO + textCoroutineJob as CompletableJob
+
     }
 
     private fun initSearchAdapter() {
@@ -90,25 +106,42 @@ class SearchFragment : Fragment() {
         rvPagingEvent()
     }
 
+    private fun initSaveImageSearchText(){
+        saveImageSearchTextAdapter = SaveImageSearchTextAdapter()
+    }
+
     private fun initSearchEvent() {
         //searchViewModel.getSearchData("책상", "accuracy", 1, 50)
-        lifecycleScope.launch(textCoroutineContext) {
-            val editFlow = binding.etSearchImage.textChangesToFlow()
-            editFlow
-                .debounce(1000)
-                .filter {
-                    it?.length!! > 1
-                }
-                .onEach {
-                    if (keyword != it.toString()) {
-                        searchViewModel.sumSearchData.clear()
-                        keyword = it.toString()
-                        rvPagingSet.clear()
+        textCoroutineContext?.let { coroutineContext ->
+            lifecycleScope.launch(coroutineContext) {
+                val editFlow = binding.etSearchImage.textChangesToFlow()
+                editFlow
+                    .debounce(1000)
+                    .filter {
+                        it?.length!! > 1
                     }
-                    searchViewModel.getSearchData(keyword, "accuracy", 1, PAGING_SIZE)
-                }
-                .launchIn(this)
+                    .onEach { text ->
+                        if (keyword != text.toString()) {
+                            searchViewModel.sumSearchData.clear()
+                            keyword = text.toString()
+                            rvPagingSet.clear()
+                        }
+                        val list = search(keyword, imageDataStore.getListImageSearchData())
+                        if (list.isNotEmpty()) {
+                            //뷰 보여주기
+                        }
+
+                        imageDataStore.saveImageSearchData(keyword)
+                        searchViewModel.getSearchData(keyword, "accuracy", 1, PAGING_SIZE)
+                    }
+                    .launchIn(this)
+            }
         }
+    }
+
+    private fun search(query: String, data: List<String>?): List<String> {
+        val pattern = query.toRegex(RegexOption.IGNORE_CASE)
+        return data?.filter { it.contains(pattern) } ?: listOf()
     }
 
 
@@ -177,7 +210,8 @@ class SearchFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        textCoroutineContext.cancel()
+        Log.d("dodo55 ", "searchfragment onDestroyView")
+        textCoroutineContext?.cancel()
         dialogFragment?.isVisible.let {
             dialogFragment?.dismiss()
         }
@@ -185,7 +219,12 @@ class SearchFragment : Fragment() {
         backEvent = null
         _binding = null
         super.onDestroyView()
+    }
 
+    override fun onDestroy() {
+        Log.d("dodo55 ", "searchfragment onDestroy")
+
+        super.onDestroy()
     }
 
     companion object {

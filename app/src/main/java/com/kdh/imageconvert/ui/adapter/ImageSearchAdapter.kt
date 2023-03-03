@@ -9,8 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -26,9 +28,9 @@ import com.kdh.imageconvert.data.model.Document
 import com.kdh.imageconvert.databinding.ProgressItemBinding
 import com.kdh.imageconvert.databinding.SearchImageItemBinding
 import com.kdh.imageconvert.ui.adapter.diffutil.ImageDiffCallback
+import com.kdh.imageconvert.ui.`interface`.OnItemClickListener
 
-//class ImageSearchAdapter : ListAdapter<Document, ImageSearchAdapter.ImageSearchViewHolder>(ImageDiffCallback()) {
-class ImageSearchAdapter(private val context : Context) : ListAdapter<Document, RecyclerView.ViewHolder>(ImageDiffCallback()) {
+class ImageSearchAdapter(private val context: Context) : ListAdapter<Document, RecyclerView.ViewHolder>(ImageDiffCallback()) {
 
     private var listener: OnItemClickListener? = null
     var isLoading = false
@@ -54,7 +56,6 @@ class ImageSearchAdapter(private val context : Context) : ListAdapter<Document, 
             //로딩
             ProgressViewHolder(binding)
         } else {
-
             ImageSearchViewHolder(binding)
         }
     }
@@ -66,13 +67,16 @@ class ImageSearchAdapter(private val context : Context) : ListAdapter<Document, 
         }
     }
 
+
     override fun getItemViewType(position: Int): Int {
+
         return if (position == itemCount - 1 && isLoading) {
             VIEW_TYPE_PROGRESS
         } else {
             VIEW_TYPE_DATA
         }
     }
+
 
     inner class ProgressViewHolder(private val binding: SearchImageItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind() {
@@ -91,20 +95,20 @@ class ImageSearchAdapter(private val context : Context) : ListAdapter<Document, 
             binding.progressImage.visibility = View.GONE
             GlideApp.with(binding.ivImageSearch)
                 .load(document.image_url)
-                .listener(object : RequestListener<Drawable>{
+                .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
                         return false
                     }
 
                     override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                       // 특정 height 초과했을떄 값 고정
-                        resource?.let{
+                        // 특정 height 초과했을떄 값 고정
+                        resource?.let {
                             val height = it.intrinsicHeight
-                            val maxHeight =  context.resources.getDimensionPixelSize(R.dimen.image_max_height)
+                            val maxHeight = context.resources.getDimensionPixelSize(R.dimen.image_max_height)
 //                            Log.d("dodo55 ","height : ${height}  ,, maxHeight : ${maxHeight}")
-                            if(height > maxHeight){
+                            if (height > maxHeight) {
                                 binding.ivImageSearch.layoutParams.height = maxHeight
-                            }else{
+                            } else {
                                 binding.ivImageSearch.layoutParams.height = height
                             }
                         }
@@ -115,13 +119,9 @@ class ImageSearchAdapter(private val context : Context) : ListAdapter<Document, 
                 .apply(GlideExtension.imageOptions(RequestOptions()))
 //                .override(imageViewWidth, imageViewHeight)
                 .into(binding.ivImageSearch)
-            binding.tvImageSize.text = "${document.width} x ${document.height}"
         }
     }
 
-    interface OnItemClickListener {
-        fun onItemClicked(position: Int): Unit
-    }
 
     fun setClickListener(itemListener: OnItemClickListener) {
         this.listener = itemListener

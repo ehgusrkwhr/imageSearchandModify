@@ -33,6 +33,11 @@ class SearchViewModel : ViewModel() {
         }
     }
 
+    fun removeSearchData(){
+        _searchData.value = UiState.Empty
+        sumSearchData.clear()
+    }
+
 //    fun fetchSaveImageSearchTextList() : List<String>{
 //
 //    }

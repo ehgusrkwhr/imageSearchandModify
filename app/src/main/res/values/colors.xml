@@ -7,5 +7,10 @@
   <color name="teal_700">#FF018786</color>
   <color name="black">#FF000000</color>
   <color name="white">#FFFFFFFF</color>
+  <color name="white_50">#80808080</color>
   <color name="gray">#5C5A5A</color>
+  <color name="background_rv_gray">#242424</color>
+  <color name="search_edittext_gray">#333333</color>
+  <color name="bottom_nav_color">#9D9797</color>
+  <color name="search_float">#4E6A78</color>
 </resources>

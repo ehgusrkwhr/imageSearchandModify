@@ -34,6 +34,7 @@ class ImageFrameAdapter : ListAdapter<FileInfo, ImageFrameAdapter.ImageFrameView
             GlideApp.with(binding.ivCardImage)
                 .load(fileInfo.contentUri)
                 .apply { GlideExtension.imageOptions(RequestOptions()) }
+//                .override(com.bumptech.glide.request.target.Target.SIZE_ORIGINAL, com.bumptech.glide.request.target.Target.SIZE_ORIGINAL)
                 .into(binding.ivCardImage)
 
         }

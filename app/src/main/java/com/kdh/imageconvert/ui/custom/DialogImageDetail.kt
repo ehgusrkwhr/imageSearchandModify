@@ -110,10 +110,8 @@ class DialogImageDetail(pos: Int) : DialogFragment() {
                     }
                 }
             }
-
-
-            //비트맵 .. 현재
         }
+
     }
 
     override fun onDestroyView() {

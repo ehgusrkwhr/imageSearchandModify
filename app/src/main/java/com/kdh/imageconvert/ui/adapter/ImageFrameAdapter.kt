@@ -27,7 +27,7 @@ class ImageFrameAdapter : ListAdapter<FileInfo, ImageFrameAdapter.ImageFrameView
 
     inner class ImageFrameViewHolder(private val binding: ItemFrameImageBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
-            // 이벤트 설정
+            // 이벤트 설정 여기서 다이어로그 띄워야함 ..
         }
 
         fun bind(fileInfo: FileInfo, pos: Int) {

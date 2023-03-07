@@ -13,4 +13,6 @@
   <color name="search_edittext_gray">#333333</color>
   <color name="bottom_nav_color">#9D9797</color>
   <color name="search_float">#4E6A78</color>
+  <color name="positive_btn_color">#EEE5FF</color>
+  <color name="negative_btn_color">#D0BDF5</color>
 </resources>

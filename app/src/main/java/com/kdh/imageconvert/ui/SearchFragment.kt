@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.kdh.imageconvert.SearchApp.Companion.getAppContext
+import com.kdh.imageconvert.SearchApp
 import com.kdh.imageconvert.databinding.FragmentSearchBinding
 import com.kdh.imageconvert.repeatLastCollectOnStarted
 import com.kdh.imageconvert.textChangesToFlow
@@ -46,10 +46,11 @@ class SearchFragment : Fragment() {
     private var textCoroutineContext: CoroutineContext? = null
     private var backEvent: OnBackPressedCallback? = null
     private var dialogFragment: DialogImageDetail? = null
-    private val imageDataStore by lazy { ImageDataStore(getAppContext(requireContext())) }
+    private val imageDataStore by lazy { ImageDataStore(SearchApp.getInstance()) }
     private var searchEventFlag = true
     private var keyword = ""
     private val rvPagingSet = mutableSetOf<Int>()
+
     // 미리보기 text
     private var previewSearchTextList: List<String>? = null
 
@@ -254,6 +255,7 @@ class SearchFragment : Fragment() {
 
     override fun onDestroyView() {
         Log.d("dodo55 ", "searchfragment onDestroyView")
+        binding.etSearchImage.text.clear()
         textCoroutineContext?.cancel()
         dialogFragment?.isVisible.let {
             dialogFragment?.dismiss()

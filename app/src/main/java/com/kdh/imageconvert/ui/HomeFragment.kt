@@ -1,31 +1,28 @@
 package com.kdh.imageconvert.ui
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kdh.imageconvert.databinding.FragmentHomeBinding
-import com.kdh.imageconvert.databinding.FragmentSearchBinding
+import com.kdh.imageconvert.repeatLastCollectOnStarted
 import com.kdh.imageconvert.ui.adapter.ImageFrameAdapter
+import com.kdh.imageconvert.ui.adapter.SaveConvertImageAdapter
 import com.kdh.imageconvert.ui.custom.CustomSimpleDialog
-import com.kdh.imageconvert.ui.listener.FadeInOutPageTransFormer
 import com.kdh.imageconvert.ui.listener.PageFlyingTransFormer
 import com.kdh.imageconvert.ui.viewmodel.SearchViewModel
 import com.kdh.imageconvert.util.FileUtil
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
-import kotlin.math.abs
 
 class HomeFragment : Fragment() {
 
-    //    private val binding : Sear
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
@@ -44,20 +41,40 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initImageFrameAdapter()
         getImageFiles()
+        initVpEvent()
+        initSaveImageAdapter()
 
     }
 
     private fun initVpEvent() {
         //가져오기 특정 폴더 안에 있는 데이터...
+
+        binding.btnImageAdd.setOnClickListener {
+            imageFrameAdapter?.currentList?.get(binding.vpConvertImage.currentItem)?.let { fileInfo ->
+                Log.d("dodo33 ", "fileInfo : ${fileInfo}")
+                viewModel.selectedSaveConvertImage(fileInfo)
+            }
+        }
+
+        binding.btnImageConvert.setOnClickListener {
+            val bitmapList = viewModel.convertFileToBitmap()
+            //추가 파일 리스트 비트맵 리스트로 전환 해서 glide 함수 사용 해서 Gif 로 뷰에 보여 주기
+        }
     }
 
     private fun getImageFiles() {
-        lifecycleScope.launch(coroutineContext) {
-            //파일객체가져오기
-            val fileList = FileUtil.fetchImagesToMediaStore(requireContext())
-            //객체를 비트맵 전환 ????
-            withContext(Dispatchers.Main) {
-                imageFrameAdapter?.submitList(fileList)
+        viewModel.getImageSearchFileList()
+    }
+
+
+    private fun initSaveImageAdapter() {
+        val saveImageAdapter = SaveConvertImageAdapter()
+        binding.rvImageAddList.adapter = saveImageAdapter
+
+        repeatLastCollectOnStarted {
+            viewModel.imageSaveFileList.collect { saveFiles ->
+                saveImageAdapter.submitList(saveFiles)
+                Log.d("dodo33 ", "saveFiles : ${saveFiles}")
             }
         }
     }
@@ -69,36 +86,38 @@ class HomeFragment : Fragment() {
             private var isDownEvent = false // 아이템 눌렀는지 파악
 
             override fun onDoubleTap(e: MotionEvent?): Boolean {
-                val dialog = CustomSimpleDialog("이미지 삭제하시겠습니까?", "정말로 삭제 하겠씁니까!!??")
+                val dialog = CustomSimpleDialog("이미지 삭제하시겠습니까?", "정말로 삭제 하겠습니까!?")
+                dialog.setButtonClickListener(object : CustomSimpleDialog.SimpleDialogClickedListener {
+                    override fun onNegativeClicked() {
+                        dialog.dismiss()
+                    }
+
+                    override fun onPositiveClicked() {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            imageFrameAdapter?.getItemId(binding.vpConvertImage.currentItem)
+                            val item = imageFrameAdapter?.currentList?.get(binding.vpConvertImage.currentItem)
+                            var result: Boolean = false
+                            item?.let { fileInfo ->
+                                withContext(Dispatchers.IO) {
+                                    result = FileUtil.deleteImageFile(requireContext(), fileInfo)
+                                }
+                                dialog.dismiss()
+                                if (result) {
+                                    getImageFiles()
+                                    Toast.makeText(requireContext(), "삭제가 되었습니다.", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(requireContext(), "삭제가 실패.", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    }
+
+                })
                 if (parentFragmentManager.findFragmentByTag("simple_dialog") == null) {
                     dialog.show(parentFragmentManager, "simple_dialog")
                 }
                 return super.onDoubleTap(e)
             }
-
-//            override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
-//                // 수평 움직임 보다 수직 움직임이 클떄 !! 위 아래 상관 ㄴㄴ
-//                if ((abs(distanceY) > abs(distanceX) && abs(distanceY) > 60 ) && isDownEvent) {
-//                    Log.d("dodo55 ", "distanceY : ${distanceY}")
-//                    if (distanceY > 0) {  //위쪽 이벤트 처리
-//
-//                    } else { //아래쪽 이벤처리
-//                        //다이어 로그
-//                        val dialog = CustomSimpleDialog("이미지 삭제하시겠습니까?", "정말로 삭제 하겠씁니까!!??")
-//                        if (parentFragmentManager.findFragmentByTag("simple_dialog") == null) {
-//                            dialog.show(parentFragmentManager, "simple_dialog")
-//                        }
-//                    }
-//                    isDownEvent = false
-//                }
-//                return true
-//            }
-//
-//            override fun onDown(e: MotionEvent?): Boolean {
-//                isDownEvent = true
-//                return true
-//            }
-
 
         })
 
@@ -115,13 +134,20 @@ class HomeFragment : Fragment() {
                     isSmoothScrollbarEnabled = false
                 }
                 it.setOnTouchListener { v, event ->
-                    Log.d("dodo55 ", "setOnTouchListener")
+//                    Log.d("dodo55 ", "setOnTouchListener")
                     gestureDetector.onTouchEvent(event)
                     v.performClick()
                     false
                 }
             }
         }
+
+        repeatLastCollectOnStarted {
+            viewModel.imageFileList.collect { fileList ->
+                imageFrameAdapter?.submitList(fileList)
+            }
+        }
+
     }
 
     override fun onDestroyView() {

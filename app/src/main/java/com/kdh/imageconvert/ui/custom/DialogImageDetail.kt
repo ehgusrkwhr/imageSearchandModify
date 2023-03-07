@@ -89,7 +89,7 @@ class DialogImageDetail(pos: Int) : DialogFragment() {
                     super.onPageSelected(position)
                     binding?.apply {
                         tvImageTitle.text = searchViewModel.sumSearchData[position].display_sitename
-                        tvImageSize.text = "${searchViewModel.sumSearchData[position].width} x ${searchViewModel.sumSearchData[position].height}"
+                        tvImageSize.text = getString(R.string.list_image_size, searchViewModel.sumSearchData[position].width, searchViewModel.sumSearchData[position].height)
                     }
                 }
             })
@@ -101,8 +101,8 @@ class DialogImageDetail(pos: Int) : DialogFragment() {
             coroutineScope.launch {
                 val bitmap = FileUtil.getBitmapFromUrl(searchViewModel.sumSearchData[binding?.vpImageDetail?.currentItem!!].image_url)
                 bitmap?.let {
-                    FileUtil.saveBitmapToFile(it, SearchApp.getAppContext(requireContext()))?.let { file ->
-                        FileUtil.saveImageToMediaStore(SearchApp.getAppContext(requireContext()), file)?.let {
+                    FileUtil.saveBitmapToFile(it, SearchApp.getInstance())?.let { file ->
+                        FileUtil.saveImageToMediaStore(SearchApp.getInstance(), file)?.let {
                             withContext(Dispatchers.Main) {
                                 Toast.makeText(requireContext(), "파일 저장 완료.", Toast.LENGTH_LONG).show()
                             }

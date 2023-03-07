@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
@@ -13,6 +14,7 @@ import android.provider.MediaStore
 import android.provider.MediaStore.Audio.Media
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.core.graphics.scaleMatrix
 import com.kdh.imageconvert.data.model.FileInfo
 import retrofit2.http.Url
 import java.io.File
@@ -110,12 +112,12 @@ object FileUtil {
 
     fun fetchImagesToMediaStore(context: Context): List<FileInfo>? {
 
-        val imageUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            MediaStore.Downloads.EXTERNAL_CONTENT_URI
-        } else {
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        }
-
+//        val imageUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//            MediaStore.Downloads.EXTERNAL_CONTENT_URI
+//        } else {
+//            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+//        }
+        val imageUri = MediaStore.Files.getContentUri("external")
         val projection = arrayOf(
             MediaStore.Images.Media._ID,
             MediaStore.Images.Media.DISPLAY_NAME,
@@ -124,11 +126,16 @@ object FileUtil {
             MediaStore.Downloads.RELATIVE_PATH
         )
 
-        val jpgPath = "%$FILE_PATH%"
-        val selection = "${MediaStore.Downloads.RELATIVE_PATH} like ?"
+//        val jpgPath = "${imageUri}/%/${FILE_PATH}/%"
+        val jpgPath = "%${FILE_PATH}%.jpg"
+//        val selection = "${MediaStore.Downloads.RELATIVE_PATH} like ?"
+        val selection = "${MediaStore.Files.FileColumns.DATA} like ?"
         val selectionArgs = arrayOf(jpgPath)
         val sortOrder = "${MediaStore.Images.Media.DATE_MODIFIED} DESC"
         val fileList = mutableListOf<FileInfo>()
+
+        Log.d("dodo55 ", "selection ${selection}")
+        Log.d("dodo55 ", "selectionArgs ${selectionArgs}")
         context.contentResolver.query(
             imageUri,
             projection,
@@ -147,17 +154,26 @@ object FileUtil {
                 val size = cursor.getLong(sizeColumn)
                 val dateModified = cursor.getLong(dateModifiedColumn)
                 val contentUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
-                if (displayName.endsWith(".jpg") || displayName.endsWith(".png") || displayName.endsWith(".jpeg")) {
-                    val fileInfo =
-                        FileInfo(
-                            id = id,
-                            displayName = displayName,
-                            size = size,
-                            dateModified = dateModified,
-                            contentUri = contentUri
-                        )
-                    fileList.add(fileInfo)
-                }
+                val fileInfo =
+                    FileInfo(
+                        id = id,
+                        displayName = displayName,
+                        size = size,
+                        dateModified = dateModified,
+                        contentUri = contentUri
+                    )
+                fileList.add(fileInfo)
+//                if (displayName.endsWith(".jpg") || displayName.endsWith(".png") || displayName.endsWith(".jpeg")) {
+//                    val fileInfo =
+//                        FileInfo(
+//                            id = id,
+//                            displayName = displayName,
+//                            size = size,
+//                            dateModified = dateModified,
+//                            contentUri = contentUri
+//                        )
+//                    fileList.add(fileInfo)
+//                }
                 // 이미지 정보를 사용하여 작업 수행
             }
 
@@ -167,13 +183,30 @@ object FileUtil {
     }
 
     fun deleteImageFile(context: Context, fileInfo: FileInfo): Boolean {
-        val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        val selection = MediaStore.Images.Media._ID
+        val uri = MediaStore.Files.getContentUri("external")
+        val selection = "${MediaStore.Images.Media._ID} like ?"
+//        val selection = MediaStore.Images.Media._ID
         val selectionArgs = arrayOf(fileInfo.id.toString())
         val contentResolver = context.contentResolver
         val rowsDeleted = contentResolver.delete(uri, selection, selectionArgs)
         return rowsDeleted > 0
 
+    }
+
+//    fun selectedImageFile(context : Context,fileInfo : FileInfo) {
+//        // uri 로 파일찾기
+//        // 경로를 리턴??
+//    }
+
+
+    fun resizeBitmap(bitmap: Bitmap,newWidth : Int, newHeight : Int) : Bitmap{
+        val width = bitmap.width
+        val height = bitmap.height
+        val scaleWidth = newWidth.toFloat() / width
+        val scaleHeight = newHeight.toFloat() / height
+        val matrix = Matrix()
+        matrix.postScale(scaleWidth, scaleHeight)
+        return Bitmap.createBitmap(bitmap,0,0,width,height,matrix,false)
     }
 
 
